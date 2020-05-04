@@ -11,7 +11,28 @@
 <body>
     <div class="wrap">
         <h1>Jednoręki bandyta</h1>
+
+        <section class="game">
+            <div class="color"></div>
+            <div class="color"></div>
+            <div class="color"></div>
+        </section>
+
+        <section class="play">
+            <input type="number" placeholder="Podaj stawkę" id="bid">
+            <button id="start">Zakręć!</button>
+        </section>
+
+        <section class="panel">
+            Twoje środki przed kolejną grą to: <span class="wallet"></span>
+        </section>
+
+        <section class="score">
+            <span class="result"></span> Za tobą <span class="number"></span> gier, w tym <span class="win"></span>
+            wygranych i <span class="loss"></span> przegranych
+        </section>
     </div>
+    <script src="main.js"></script>
 </body>
 
 </html>
