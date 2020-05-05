@@ -3,7 +3,7 @@ class Game {
         this.stats = new Statistics();
         this.wallet = new Wallet(start);
 
-        document.getElementById("start").addEventListener('click', this.startGame);
+        document.getElementById("start").addEventListener('click', this.startGame.bind(this));
         this.spanWallet = document.querySelector('.panel span.wallet');
         this.boards = [...document.querySelectorAll('div.color')];
         this.input = document.getElementById('bid');
@@ -22,9 +22,9 @@ class Game {
         })
         this.spanWallet.textContent = money;
         if (result) {
-            result = `Wygrałeś ${wonMoney}`;
-        } else if (!result && result != "") {
-            result = `Przegrałeś ${bid}`;
+            result = `Wygrałeś ${wonMoney}$. `;
+        } else if (!result && result !== "") {
+            result = `Przegrałeś ${bid}$. `;
         }
         this.spanResult.textContent = result;
         this.spanGame.textContent = stats[0];
@@ -35,6 +35,29 @@ class Game {
     }
     //uruchamianie gry
     startGame() {
+        if (this.input.value < 1) {
+            return alert("Kwota którą chcesz grać jest za mała");
+        } else if (this.input.value === "") {
+            return alert("Podaj stawkę za którą chcesz grać");
+        }
 
+        const bid = Math.floor(this.input.value);
+        if (!this.wallet.checkCanPlay(bid)) {
+            return alert("Masz za mało środków, lub została podana nieprawidłowa wartość");
+        }
+
+        this.wallet.changeWallet(bid, '-');
+
+        this.draw = new Draw();
+        const colors = this.draw.drawResult();
+
+        const win = Result.checkWinner(colors);
+        const wonMoney = Result.moneyWinInGame(win, bid);
+        this.wallet.changeWallet(wonMoney);
+
+        this.stats.addGameToStats(win, bid);
+
+        this.input.value = "";
+        this.render(colors, this.wallet.getWalletValue(), win, this.stats.showGameStats(), bid, wonMoney);
     }
 }
